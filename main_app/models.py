@@ -8,13 +8,29 @@ MEALS=(
 )
 
 # Create your models here.
+
+
+class Travel(models.Model):
+  place=models.CharField(max_length=20,default='beach')
+  city=models.CharField(max_length=20,default='Melbourne')
+
+  def __str__(self):
+    return self.place
+
+  def get_absolute_url(self):
+    return reverse('travel_detail', kwargs={
+      'pk':self.id
+    })  
+
+
 class Finch(models.Model):
   name=models.CharField(max_length=100)
   breed=models.CharField(max_length=100)
   description=models.TextField(max_length=250)
   age=models.IntegerField()
+  travel_places=models.ManyToManyField(Travel)
 
-  def __str_(self):
+  def __str__(self):
     return f'{self.name}: {self.id}'
 
   def get_absolute_url(self):
@@ -36,7 +52,7 @@ class Feeding(models.Model):
 # In a one-to-many relationship, the on_delete=models.CASCADE is required. It ensures that if a Cat record is deleted, all of the child Feedings will be deleted automatically as well - thus avoiding orphan records
   finch=models.ForeignKey(Finch, on_delete=models.CASCADE)  
 
-  def __str_(self):
+  def __str__(self):
     # Nice method for obtaining the friendly value of a Field.choice
     return f'{self.get_meal_display()} on {self.date}'  
 
